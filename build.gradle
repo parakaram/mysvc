@@ -1,0 +1,50 @@
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.21.RELEASE'
+	}
+}
+
+plugins {
+	id 'java'
+}
+
+apply plugin: 'org.springframework.boot'
+
+group = 'msvcdojo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-actuator-docs'
+	compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile ("org.springframework.boot:spring-boot-starter-web:1.5.21.RELEASE") {
+		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+	}
+	compile ('org.springframework.boot:spring-boot-starter-jetty') {
+		exclude group: 'org.eclipse.jetty.websocket'
+	}
+	compile('org.springframework.boot:spring-boot-starter-actuator')
+	compile('org.springframework.boot:spring-boot-actuator-docs')
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	testLogging {
+		afterSuite { desc, result ->
+			if (!desc.parent) {
+				println "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+			}
+		}
+	}
+	reports {
+		junitXml.enabled = false
+		html.enabled = true
+	}
+}
